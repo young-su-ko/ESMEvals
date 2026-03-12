@@ -8,3 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Slurm files and test outputs
+slurm_outputs/
+*.csv
+*.pdb
+*.ipynb
+*.png
+*.sh
+*.fasta

@@ -131,5 +131,36 @@ def predict_structure(
     print(table)
 
 
+@app.command("fid")
+def compute_frechet_distance(
+    generated_fasta_path: str = typer.Argument(
+        ...,
+        help="Path to generated sequences FASTA file.",
+    ),
+    reference_fasta_path: str = typer.Argument(
+        ...,
+        help="Path to reference sequences FASTA file.",
+    ),
+    device: str | None = typer.Option(
+        None,
+        "--device",
+        help="Device to run on, e.g. 'cpu' or 'cuda'. Defaults to auto-detect.",
+    ),
+) -> None:
+    evaluator = SequenceEvaluator(device=device)
+    result = evaluator.calculate_frechet_distance(
+        generated_fasta_path=generated_fasta_path,
+        reference_fasta_path=reference_fasta_path,
+    )
+
+    table = Table()
+    table.add_column("Attribute", style="magenta", no_wrap=True)
+    table.add_column("Result", style="white")
+    table.add_row("Generated FASTA", result.generated_fasta_path)
+    table.add_row("Reference FASTA", result.reference_fasta_path)
+    table.add_row("Frechet Distance", f"{result.distance:.3f}")
+    print(table)
+
+
 if __name__ == "__main__":
     app()

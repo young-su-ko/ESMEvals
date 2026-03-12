@@ -9,7 +9,33 @@ from .structure_utils import (
     extract_mean_plddt,
     sanitize_sequence,
 )
+"""
+Simplify using the ProteinTTT code as reference:
+import torch
+import esm
+import biotite.structure.io as bsio
+from proteinttt.models.esmfold import ESMFoldTTT, DEFAULT_ESMFOLD_TTT_CFG
 
+# Set your sequence
+sequence = "GIHLGELGLLPSTVLAIGYFENLVNIICESLNMLPKLEVSGKEYKKFKFTIVIPKDLDANIKKRAKIYFKQKSLIEIEIPTSSRNYPIHIQFDENSTDDILHLYDMPTTIGGIDKAIEMFMRKGHIGKTDQQKLLEERELRNFKTTLENLIATDAFAKEMVEVIIEE"
+
+# Load model
+model = esm.pretrained.esmfold_v1()
+model = model.eval().cuda()
+
+def predict_structure(model, sequence):
+    with torch.no_grad():
+        output = model.infer_pdb(sequence)
+
+    with open("result.pdb", "w") as f:
+        f.write(output)
+
+    struct = bsio.load_structure("result.pdb", extra_fields=["b_factor"])
+    print('pLDDT:', struct.b_factor.mean())
+
+predict_structure(model, sequence)
+# pLDDT: 38.43025
+"""
 
 @dataclass
 class StructurePrediction:
